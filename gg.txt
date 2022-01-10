@@ -1,3 +1,19 @@
 <a href='https://www.freepik.com/vectors/food'>Food vector created by upklyak - www.freepik.com</a>
 
 <a href='https://www.freepik.com/vectors/background'>Background vector created by katemangostar - www.freepik.com</a>
+
+
+      // let frequency = {}
+        // let fullWinArray = []        
+        // winArray.forEach(v=>{
+        //     v.forEach(vv=>{
+        //         fullWinArray.push(vv)
+        //     })
+        // })
+        //fullWinArray.forEach(v => frequency[v] ? frequency[v]++ : frequency[v] = 1)
+        // let playedSpace = []       
+        // Object.keys(score).forEach(v=>{
+        //     if(score[v] === player){
+        //         playedSpace.push([v]) 
+        //     }
+        // })   

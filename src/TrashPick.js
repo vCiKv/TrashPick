@@ -1,31 +1,38 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
+
 import './style.css';
 
 const TrashPick=()=> {
   //const list = [[400,700],[570,834],[406,234],[640,389],[650,214]]
-  const randomNumbers = (minY,maxY,minX,maxX)=>{
-    return [Math.floor (Math.random() * (maxY - minY + 1) + minY),Math.floor (Math.random() * (maxX - minX + 1) + minX)]
+  const randomNumber = (min,max)=>{
+    return Math.floor (Math.random() * (max - min + 1) + min)
   }
   const [trashList,setTrashList] = useState([])
-  const getLocations=()=>{
+  const [score,setScore] = useState(0)
+  const [allTrash,setAllTrash] = useState(0)
+  const setLocations=()=>{
     let c = 0
     let arr = []
-    while (c < 10) {
-      arr.push(randomNumbers(470,650,200,1200))
+    while (c < randomNumber(10,20)) {
+      //arr.push([randomNumber(10,85),randomNumber(4,96)])
+      arr.push({pos:[randomNumber(10,85),randomNumber(4,96)],display:true})
       c++
     }
     setTrashList(arr)
+    setAllTrash(arr.length)
   }
-  const [score,setScore] = useState(0)
   useEffect(()=>{
-    getLocations()
+    setLocations()
   },[])
   const destroy = (index)=>{
     setScore(score + 1)
-    setTrashList(trashList.filter((el,i)=> i !== index))
+    const tempTrashList = [...trashList]
+    tempTrashList[index].display = false;
+    console.log(tempTrashList)
+    //setTrashList(trashList.filter((el,i)=> i !== index))
   }
   const reset=()=>{
-    getLocations()
+    setLocations()
     setScore(0)
   }
   const TrashItem =(props)=>{
@@ -34,17 +41,25 @@ const TrashPick=()=> {
     //rest
   
     const trashStyle={
+      display: (props.display) ? 'block' : 'none',
       width:"30px",
       height:"30px",
       backgroundColor:"black",
       position:"absolute",
       zIndex:100,
-      top:props.top,
-      left:props.left
+      top:props.top + '%',
+      left:props.left +'%',
+      margin:0
     }
     return (<div onClick={()=>destroy(props.index)} style={trashStyle}></div>)
   }
   const SeaBackground = ()=>{
+    const playground = {
+      left: 0,
+      width: "100%",
+      height: "100%",
+      background:"transparent"
+    }
     return(
     <div className="art-board">
       <div className="stars">
@@ -74,29 +89,47 @@ const TrashPick=()=> {
         <div className="beams"></div>
         <div className="beams"></div>
         <div className="beams"></div>
-        <div className="text">
+        <div style={playground}>
+          {trashList.map((i,index)=>{
+            return(<TrashItem key={index} index={index} top={i.pos[0]} left={i.pos[1]} display={i.display} />);
+          })}
         </div>
       </div>
     </div>
     )
   }
+  const WinScreen = ()=>{
+    const close =()=>{
+     setAllTrash(0)
+    }
+    return (
+      <div className="winStyle">
+        <div>
+          <h2>Thanks for Cleaning up Remember to Recycle and Dispose Trash Properly in your Everyday Life <br/> We Only have One Planet </h2>
+          <button onClick={close}>X</button> 
+        </div>
+          
+      </div>
+    )
+  }
   const scoreStyle= {
-    position:"relative",
+    position:"fixed",
     top:0,
     padding:"7px",
-    right: 10,
-    marginTop:"5px"
+    right: 15,
+    marginTop:"5px",
+    border:"1px solid #cacaca",
+    borderRadius:"4px",
+    background:"rgb(90 90 90)",
+    fontFamily: "'Josefin Sans', sans-serif"
+
   }
+  
   return (
     <div className="App">
+      {(score === allTrash && score !== 0)?<WinScreen/>:null}
       <SeaBackground/>
-      {/* <div className="play-area"> */}
-      <span style={scoreStyle}> current score is: {score} <button onClick={reset}>reset </button> </span> 
-      {trashList.map((i,index)=>{
-        return(<TrashItem key={index} index={index} top={i[0]} left={i[1]} />)
-      })}
-        {/* <Credits/> */}
-      {/* </div> */}
+      <span  className="text" style={scoreStyle}> current score is: {score} <button onClick={reset}> reset </button> </span> 
     </div>
   );
 }

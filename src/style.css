@@ -5,6 +5,37 @@ body {
   background: #181835;
 }
 
+div.winStyle {
+  position:fixed;
+  left:0;
+  top:0;
+  width:100vw;
+  height:100vh;
+  background-color: rgba(0 ,0 ,0, 0.6);
+  z-index: 1500;
+}
+.winStyle div{
+  min-width:320px;
+  width:50%;
+  padding:10px;
+  display:block;
+  text-align:center;
+  border:1px solid grey;
+  border-radius: 4px;
+  margin:120px auto;
+  /* font-family: "Helvetica Neue",Helvetica,Arial; */
+  font-family: "Josefin Sans", sans-serif;
+  background: #181835;
+  color: white;
+}
+.winStyle button{
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  position: relative;
+  /* top: 120px;
+  left: 20%; */
+}
 .art-board {
   position: relative;
   width: 40rem;
@@ -186,8 +217,8 @@ body {
   height: 100%;
   border-radius: 50%;
   box-shadow: 0 0 15px 8px rgba(255, 255, 255, 0.18);
-  /* -webkit-animation: moonLight 2s ease-in-out infinite alternate;
-          animation: moonLight 2s ease-in-out infinite alternate; */
+  -webkit-animation: moonLight 2s ease-in-out infinite alternate;
+          animation: moonLight 2s ease-in-out infinite alternate;
 }
 .moon .ship {
   z-index: 3;
@@ -207,8 +238,8 @@ body {
   background: rgba(120, 64, 132, 0.3);
   border-radius: 50%;
   transform: rotate(-15deg);
-  /* -webkit-animation: travel 12s linear infinite;
-          animation: travel 12s linear infinite; */
+  -webkit-animation: travel 12s linear infinite;
+          animation: travel 12s linear infinite;
 }
 .moon .ship span::before {
   position: absolute;
@@ -231,8 +262,8 @@ body {
   border-radius: 50%;
   background: rgba(204, 0, 0, 0.2);
   transform: translateY(-50%);
-  /* -webkit-animation: engine 0.2s ease-in-out infinite alternate;
-          animation: engine 0.2s ease-in-out infinite alternate; */
+  -webkit-animation: engine 0.2s ease-in-out infinite alternate;
+          animation: engine 0.2s ease-in-out infinite alternate;
 }
 
 @-webkit-keyframes moonLight {
@@ -293,12 +324,13 @@ body {
   top: 26%;
   left: 50%;
   transform: translateX(-50%) scale(1);
-  width: 650px;
+  /* width: 650px; */
   height: 600px;
   background-image: radial-gradient(circle, rgba(120, 64, 132, 0.7), transparent 70%);
   border-radius: 50%;
   /* -webkit-animation: aurora 6s ease infinite alternate;
           animation: aurora 6s ease infinite alternate; */
+  
 }
 
 @-webkit-keyframes aurora {
@@ -362,12 +394,12 @@ body {
 }
 
 .cloud1 {
-  top: 70%;
+  top: 40%;
   left: 3%;
   transform: scale(1.4);
   opacity: 0.4;
-  /* -webkit-animation: float 3s linear infinite alternate;
-          animation: float 3s linear infinite alternate; */
+  -webkit-animation: float 3s linear infinite alternate;
+          animation: float 3s linear infinite alternate;
 }
 
 .cloud2 {
@@ -376,8 +408,8 @@ body {
   left: auto;
   right: 20%;
   opacity: 0.4;
-  /* -webkit-animation: float2 3s linear infinite alternate;
-          animation: float2 3s linear infinite alternate; */
+  -webkit-animation: float2 3s linear infinite alternate;
+          animation: float2 3s linear infinite alternate;
 }
 
 @-webkit-keyframes float {
