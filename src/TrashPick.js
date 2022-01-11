@@ -14,8 +14,8 @@ const TrashPick=()=> {
     let c = 0
     let arr = []
     while (c < randomNumber(10,20)) {
-      //arr.push([randomNumber(10,85),randomNumber(4,96)])
-      arr.push({pos:[randomNumber(10,85),randomNumber(4,96)],display:true})
+      arr.push([randomNumber(10,85),randomNumber(4,96)])
+      //arr.push({pos:[randomNumber(10,85),randomNumber(4,96)],display:true})
       c++
     }
     setTrashList(arr)
@@ -26,22 +26,17 @@ const TrashPick=()=> {
   },[])
   const destroy = (index)=>{
     setScore(score + 1)
-    const tempTrashList = [...trashList]
-    tempTrashList[index].display = false;
-    console.log(tempTrashList)
-    //setTrashList(trashList.filter((el,i)=> i !== index))
+    // const tempTrashList = [...trashList]
+    // tempTrashList[index].display = false;
+    // setTrashList(tempTrashList);
+    setTrashList(trashList.filter((el,i)=> i !== index))
   }
   const reset=()=>{
     setLocations()
     setScore(0)
   }
   const TrashItem =(props)=>{
-    //455
-    //control spawns 
-    //rest
-  
     const trashStyle={
-      display: (props.display) ? 'block' : 'none',
       width:"30px",
       height:"30px",
       backgroundColor:"black",
@@ -51,15 +46,21 @@ const TrashPick=()=> {
       left:props.left +'%',
       margin:0
     }
+    //<i class="fas fa-shopping-bag"></i> <i className="fas fa-wine-bottle fa-3x"></i>
     return (<div onClick={()=>destroy(props.index)} style={trashStyle}></div>)
   }
-  const SeaBackground = ()=>{
+  const CompletedPlayground = ()=>{
     const playground = {
       left: 0,
       width: "100%",
       height: "100%",
       background:"transparent"
     }
+    return <div style={playground}>
+      {trashList.map((i,index)=>(<TrashItem key={index} index={index} top={i[0]} left={i[1]} />))}
+    </div>
+  }
+  const SeaBackground = ()=>{
     return(
     <div className="art-board">
       <div className="stars">
@@ -89,17 +90,13 @@ const TrashPick=()=> {
         <div className="beams"></div>
         <div className="beams"></div>
         <div className="beams"></div>
-        <div style={playground}>
-          {trashList.map((i,index)=>{
-            return(<TrashItem key={index} index={index} top={i.pos[0]} left={i.pos[1]} display={i.display} />);
-          })}
-        </div>
+        <CompletedPlayground/>
       </div>
     </div>
     )
   }
-  const WinScreen = ()=>{
-    const close =()=>{
+  const WinScreen=()=>{
+    const close=()=>{
      setAllTrash(0)
     }
     return (
@@ -107,8 +104,7 @@ const TrashPick=()=> {
         <div>
           <h2>Thanks for Cleaning up Remember to Recycle and Dispose Trash Properly in your Everyday Life <br/> We Only have One Planet </h2>
           <button onClick={close}>X</button> 
-        </div>
-          
+        </div>     
       </div>
     )
   }
@@ -122,9 +118,7 @@ const TrashPick=()=> {
     borderRadius:"4px",
     background:"rgb(90 90 90)",
     fontFamily: "'Josefin Sans', sans-serif"
-
   }
-  
   return (
     <div className="App">
       {(score === allTrash && score !== 0)?<WinScreen/>:null}

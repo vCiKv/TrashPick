@@ -12,13 +12,14 @@ const TikTak = ()=>{
         7:0,
         8:0,
     }
+    const emptySpace = [0,1,2,3,4,5,6,7,8]
     // 0 1 2
     // 3 4 5
     // 6 7 8
     //win conditions 012 345 678 036 147 258 048 246
-    const [currentPlayer,setCurrentPlayer] = useState(1)
+    const [currentPlayer,setCurrentPlayer] = useState('X')
     const [score,setScore] = useState(defaultScore)
-    const [freeSpace,setFreeSpace] = useState([])
+    const [freeSpace,setFreeSpace] = useState(emptySpace)
     const [closeWin,setCloseWin] = useState([])
     const [winner,setWinner] = useState({player:0,location:[]})
     const winArray = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,6,4]]
@@ -26,11 +27,12 @@ const TikTak = ()=>{
         //console.log("current score", score[index])
         if(score[i] === 0 && winner.player === 0){
             setScore({...score,[i]:currentPlayer}) 
-            if(currentPlayer === 1){
+            freeSpace.pop([i])
+            if(currentPlayer === 'X'){
                 //computerAI(2)
-                setCurrentPlayer(4)
+                setCurrentPlayer('O')
             }else{
-                setCurrentPlayer(1)
+                setCurrentPlayer('X')
             }
             // setCloseWin([])   
         }
@@ -39,14 +41,14 @@ const TikTak = ()=>{
         setScore(defaultScore)
         setCloseWin([]) 
         setWinner({player:0,location:[]})
-        setCurrentPlayer(1)
+        setCurrentPlayer('X')
         setFreeSpace([])
     }
     const computerAI = (type)=>{   
         const player = 4
         const moves = []
         const aiWin = 0
-        const simScore = {...score}
+        let simScore = {...score}
         const checkSimWin=(arr,m)=>{
             winArray.forEach(vv =>{
                 let outcome = {}
@@ -119,6 +121,8 @@ const TikTak = ()=>{
             break
             case 1:
                 //mix
+
+                
             break
             case 2:
                 smartMoves()
@@ -129,30 +133,33 @@ const TikTak = ()=>{
  
     useEffect(()=>{
         const checkWin=()=>{
-            let emptySpace = []
-            Object.keys(score).forEach(v=>{
-                if(score[v] === 0){
-                    emptySpace.push(Number(v))
-                }
-            })
-            setFreeSpace(emptySpace)
+            // let emptySpace = []
+            // Object.keys(score).forEach(v=>{
+            //     if(score[v] === 0){
+            //         emptySpace.push(Number(v))
+            //     }
+            // })
+            // setFreeSpace(emptySpace)
             winArray.forEach(v =>{
-                let final = score[v[0]]+score[v[1]]+score[v[2]]
-                if(setFreeSpace.length >= 9){
-                    setWinner({player:9,location:[]})
-                }else{
-                    switch(final){
-                        case 3:
-                            setWinner({player:1,location:v})
-                        break;
-                        case 12:
-                            setWinner({player:4,location:v})
-                        break
-                        case 2:
-                            setCloseWin(v)
-                        break
-                    }
-                }
+                //let final = score[v[0]]+score[v[1]]+score[v[2]]
+                console.log('final',score[v[0]],score[v[1]],score[v[2]],'is true?',(score[v[0]] == score[v[1]] && score[v[1]] == score[v[2]]))    
+                if(score[v[0]] === score[v[1]] && score[v[1]] === score[v[2]] && score[v[0] !== 0]){
+                    setWinner({player:currentPlayer,location:v})
+                }else if(setFreeSpace.length >= 9){
+                    setWinner({player:'draw',location:[]})
+                }    
+                    // switch(final){
+                    //     case 3:
+                    //         setWinner({player:1,location:v})
+                    //     break;
+                    //     case 12:
+                    //         setWinner({player:4,location:v})
+                    //     break
+                    //     case 2:
+                    //         setCloseWin(v)
+                    //     break
+                    // }
+                
             }) 
         }
         checkWin()
@@ -169,7 +176,7 @@ const TikTak = ()=>{
         const index = Number(props.index)
         let text = ''
         if((score[index] !== 0)){
-            text = (score[index] === 1) ? 'X':'O'
+            text = score[index]
         }
         return (
             <div style={{background: winner.location.includes(index) ? "rgba(0,255,0,0.4)" : "rgba(255,255,255,0.3)"}} className="box" onClick={()=>{addScore(index)}}>
@@ -193,14 +200,14 @@ const TikTak = ()=>{
     const WinnerText = () =>{
         let text=''
         switch(winner.player){
-            case 1:
+            case 'X':
                 text = 'Player X wins'
             break
-            case 4:
+            case 'O':
                 text = 'Player O wins'
             break
-            case 9:
-                text = 'Players Draw'
+            case 'draw':
+                text = 'Player\'s Draw'
             break
         }
         return <div className="UI"><button onClick={reset}>Reset Game</button><button onClick={()=>computerAI(0)}>AI test</button><h1>{text}</h1></div>
