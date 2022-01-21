@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import TikTak from './TikTak.js'
 import TrashPick from './TrashPick.js'
+import OtherTikTak from './stolen.js'
 import './style.css';
 
 function App() {
@@ -19,7 +20,7 @@ function App() {
   return(
     <div>
       <button onClick={changeTab} style={menuStyle}>change App</button>
-      {tab ? <TrashPick/>:<TikTak/>}
+      {!tab ? <TrashPick/>:<TikTak/>}
 
     </div>
   )

@@ -1,183 +1,226 @@
 import React,{useState,useEffect} from 'react'
 import './tictak.css'
 const TikTak = ()=>{
-    const defaultScore = {
-        0:0,
-        1:0,
-        2:0,
-        3:0,
-        4:0,
-        5:0,
-        6:0,
-        7:0,
-        8:0,
-    }
-    const emptySpace = [0,1,2,3,4,5,6,7,8]
+    // const defaultScore = {
+    //     0:0,1:0,2:0,
+    //     3:0,4:0,5:0,
+    //     6:0,7:0,8:0,
+    // }
+    const defaultScore = [0,0,0,0,0,0,0,0,0]
     // 0 1 2
     // 3 4 5
     // 6 7 8
     //win conditions 012 345 678 036 147 258 048 246
     const [currentPlayer,setCurrentPlayer] = useState('X')
-    const [score,setScore] = useState(defaultScore)
-    const [freeSpace,setFreeSpace] = useState(emptySpace)
-    const [closeWin,setCloseWin] = useState([])
-    const [winner,setWinner] = useState({player:0,location:[]})
+    const [boardState,setBoardState] = useState(defaultScore)
+    const [winner,setWinner] = useState({player:null,location:[]})
     const winArray = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,6,4]]
-    const addScore = (i) =>{
-        //console.log("current score", score[index])
-        if(score[i] === 0 && winner.player === 0){
-            setScore({...score,[i]:currentPlayer}) 
-            freeSpace.pop([i])
-            if(currentPlayer === 'X'){
+    const compareWin = (a,b,c) =>{
+        return (a === b && b === c && c !== 0) 
+    }
+    const addScore = (i: number) =>{
+        const switchPlayers = (p: String) =>{
+            if(p === 'X'){
                 //computerAI(2)
                 setCurrentPlayer('O')
             }else{
                 setCurrentPlayer('X')
             }
-            // setCloseWin([])   
+        }
+        if(boardState[i] === 0 && winner.player === null && i != null){
+            const newState = [...boardState]
+            newState[i] = currentPlayer 
+            setBoardState(newState) 
+
+            // setBoardState({...boardState,[i]:currentPlayer}) 
+            switchPlayers(currentPlayer)
         }
     } 
     const reset = ()=>{
-        setScore(defaultScore)
-        setCloseWin([]) 
-        setWinner({player:0,location:[]})
+        setBoardState(defaultScore)
+        setWinner({player:null,location:[]})
         setCurrentPlayer('X')
-        setFreeSpace([])
     }
-    const computerAI = (type)=>{   
-        const player = 4
-        const moves = []
-        const aiWin = 0
-        let simScore = {...score}
-        const checkSimWin=(arr,m)=>{
-            winArray.forEach(vv =>{
-                let outcome = {}
-                let final = arr[vv[0]]+arr[vv[1]]+arr[vv[2]]
-                switch(final){
-                    case 3:
-                        outcome = {score:-10,move:m}
-                    break
-                    case 12:
-                        outcome = {score:10,move:m}
-                    break
-                }
-                return outcome
-            })
+    const computerAI = (type :number)=>{   
+        const AI = 'O'
+        const human = 'X'
+        let currentSim = AI
+        const switchSim =()=>{
+            currentSim = (currentSim === human) ? AI : human
         }
-        freeSpace.forEach(v =>{
-            simScore = {...simScore,[v]:player}
-            checkSimWin(simScore,v)
+        const tryWin=(board)=>{
+            let win = null
+            winArray.forEach(v =>{
+                if(compareWin(board[v[0]],board[v[1]],board[v[2]])){
+                    win = board[v[0]]
+                // }else if(!Object.values(simBoard).includes(0)){
+                //     win = 'draw'
+                // }  
+                }else if(!(board).includes(0)){
+                    win = 'draw'
+                }             
+            }) 
+            return win
+        }
+        const copyBoard=(original,index?,newValue?)=>{
+            const copiedBoard = [...original] 
+            if(index != null && newValue != null){
+                copiedBoard[index] = newValue
+                switchSim()
+            }
+            return copiedBoard
+        }
+        const MinMaxAI =()=>{
+            let outcome 
+            
+            let bestOutcome = {move:null, moveScore:-10000}
+            // Object.keys(simBoard).forEach(v =>{
+            //     if(simBoard[v] !== 0){
+            //         simBoard = {...board,[v]:currentSim}
+            //         if(currentSim === AI){
+            //             outcome = minMax('max',simBoard,0)
+            //         }else if(currentSim === human){
+            //             outcome = minMax('min',simBoard,0)
+            //         }
 
-        })
+            //         if(outcome.moveScore > bestOutcome.moveScore){
+            //             bestOutcome = outcome
+            //         }
+
+            //     }     
+            // })
+         
+            boardState.forEach((v,i) =>{
+                if(v === 0){
+                    const simBoard = copyBoard(boardState,i,AI)
+                    if(currentSim == AI){
+                        outcome = minMax('max',simBoard,0)
+                    }else if(currentSim == human){
+                        outcome = minMax('min',simBoard,0)
+                    }
+                    console.log('outcome',outcome)
+                    console.log('best outcome',bestOutcome)
+
+                    if(outcome[0] > bestOutcome.moveScore){
+                        bestOutcome = {move:outcome[1],moveScore:outcome[0]}
+                    }
+
+                }     
+            })
+            return bestOutcome
+        }
+        const minMax = (type :String, board, depth:number ) =>{
+            let simBoard = board
+            const scoreOutcome = {
+                // AI: {move:null,moveScore:10},
+                // human: {move:null,moveScore:-10},
+                // 'draw':{move:null,moveScore:0}
+                [AI]: 10,
+                [human]: -10,
+                'draw':0
+            }
+            if(tryWin(simBoard) != null){
+                return scoreOutcome[tryWin(simBoard)]
+            }
+            //let outcome = {move:null, moveScore:(type == 'max')? -Infinity : +Infinity}
+            //let outcome = (type == 'max')? -Infinity : +Infinity
+            if(type == 'max'){
+                    (simBoard).forEach((v,i) =>{
+                        if(v === 0){
+                            let outcome = [-10000,i] 
+                            
+                            const newSimBoard = copyBoard(simBoard,i,AI)
+                            
+                            const newOutcome = minMax('min',newSimBoard,depth+1)
+                            return [Math.max(newOutcome[0], outcome[0]),i]
+                        }
+                    })
+            }else if (type=='min'){
+                    (simBoard).forEach((v,i) =>{
+                        if(v === 0){
+                           let outcome = [10000,i]
+                            const newSimBoard =  copyBoard(simBoard,i,human)
+                            
+                            const newOutcome = minMax('max',newSimBoard,depth+1)
+                            return [Math.min(newOutcome[0],outcome[0]),i]
+                        }
+                    })
+
+            }
+
+
+            // switch(type){
+            //     case 'max':
+            //         Object.keys(simBoard).forEach(v =>{
+            //             if(simBoard[v] !== 0){
+            //                 simBoard={...simBoard,[v]:AI}
+            //                 switchSim()
+            //                 let newOutcome = minMax('min',simBoard,depth+1)
+            //                 outcome = {move:v,moveScore:Math.max(newOutcome.moveScore, outcome.moveScore)}
+            //                 console.log('max',outcome)
+            //             }
+            //         })
+            //     break;
+            //     case 'min':
+            //         Object.keys(simBoard).forEach(v =>{
+            //             if(simBoard[v] !== 0){
+            //                 simBoard={...simBoard,[v]:human}
+            //                 switchSim()
+            //                 let newOutcome = minMax('min',simBoard,depth+1)
+            //                 outcome = {move:v,moveScore:Math.min(newOutcome.moveScore,outcome.moveScore)}
+            //                 console.log('min',outcome)
+            //             }
+            //         })
+            //     break;
+            // }
+            //return outcome
+        }
         const randomMoves = ()=>{
+            let freeSpace = []
+            Object.keys(boardState).forEach(v=>{
+                if(boardState[v] === 0){
+                    freeSpace.push(Number(v))
+                }
+            })
             const pos = Math.floor (Math.random() * (freeSpace.length))
             addScore(freeSpace[pos])
         }
-        // const smartMoves = ()=>{
-        //     console.log('spaces',freeSpace)
-        //     if(freeSpace.length >= 8){
-        //         if (freeSpace.includes(4)) {
-        //             addScore(4)
-        //         }else{
-        //             addScore(0)
-        //         }
-        //         console.log('first move')
-        //         return null
-        //     }else if (closeWin.length > 0){
-        //         freeSpace.forEach(v =>{
-        //             if(closeWin.includes(v)){
-        //                 addScore(v)
-        //                 console.log('ai def',v)
-        //                 return null
-        //             }
-        //         })
-        //     }else{
-        //         winArray.forEach(v =>{
-        //             console.log('ai f atk')
-        //             let final = score[v[0]]+score[v[1]]+score[v[2]]
-        //             console.log(`{score[v[0]]}+{score[v[1]]}+{score[v[2]]} = {final}`)
-        //             switch(final){
-        //                 case (player === 1 ? 2 : 8) :
-        //                 case (player === 1 ? 1 : 4) :
-        //                     v.forEach(vv=>{
-        //                         if(freeSpace.includes(vv)){
-        //                             console.log('ai atk',vv)
-        //                             addScore(vv)
-        //                             return null
-        //                         }
-        //                     }) 
-        //                 break;
-        //                 default:
-        //                     addScore(freeSpace[0])
-        //                     console.log('ai default')
-        //                 break;
-        //             }              
-        //         })
-        //     }
-        // }  
+        const smartMoves=()=>{
+            const finalPlay = MinMaxAI()
+            console.log('ai', finalPlay)
+            //addScore(finalPlay)
+        }
         switch (type){
             case 0:
                 randomMoves()
             break
             case 1:
-                //mix
-
-                
+                //mix               
             break
             case 2:
                 smartMoves()
             break
         }
         return null
-    }
- 
+    } 
     useEffect(()=>{
         const checkWin=()=>{
-            // let emptySpace = []
-            // Object.keys(score).forEach(v=>{
-            //     if(score[v] === 0){
-            //         emptySpace.push(Number(v))
-            //     }
-            // })
-            // setFreeSpace(emptySpace)
             winArray.forEach(v =>{
-                //let final = score[v[0]]+score[v[1]]+score[v[2]]
-                console.log('final',score[v[0]],score[v[1]],score[v[2]],'is true?',(score[v[0]] == score[v[1]] && score[v[1]] == score[v[2]]))    
-                if(score[v[0]] === score[v[1]] && score[v[1]] === score[v[2]] && score[v[0] !== 0]){
-                    setWinner({player:currentPlayer,location:v})
-                }else if(setFreeSpace.length >= 9){
+                if(compareWin(boardState[v[0]],boardState[v[1]],boardState[v[2]])){
+                    setWinner({player:boardState[v[0]],location:v})
+                // }else if(!Object.values(boardState).includes(0)){
+                //     setWinner({player:'draw',location:[]})
+                // }  
+                }else if(!(boardState).includes(0)){
                     setWinner({player:'draw',location:[]})
-                }    
-                    // switch(final){
-                    //     case 3:
-                    //         setWinner({player:1,location:v})
-                    //     break;
-                    //     case 12:
-                    //         setWinner({player:4,location:v})
-                    //     break
-                    //     case 2:
-                    //         setCloseWin(v)
-                    //     break
-                    // }
-                
+                }             
             }) 
         }
         checkWin()
-    },[score])
-    // const changePlayer = ()=>{
-    //     if(currentPlayer === 1){
-    //         AI(2)
-    //         setCurrentPlayer(4)
-    //     }else{
-    //         setCurrentPlayer(1)
-    //     }
-    // }
+    },[boardState])
     const Box = (props) =>{
         const index = Number(props.index)
-        let text = ''
-        if((score[index] !== 0)){
-            text = score[index]
-        }
+        let text = (boardState[index] !== 0) ? boardState[index] : ''
         return (
             <div style={{background: winner.location.includes(index) ? "rgba(0,255,0,0.4)" : "rgba(255,255,255,0.3)"}} className="box" onClick={()=>{addScore(index)}}>
                 <span>{text}</span>
@@ -189,9 +232,13 @@ const TikTak = ()=>{
             <div>
                 <WinnerText/>
                 <div className="nine_nine">
-                    {Object.keys(score).map(c =>{
+                    {/* {Object.keys(boardState).map(c =>{
                         return(<Box key={c} index={c}/>)
+                    })} */}
+                    {boardState.map( (c,index) =>{
+                        return(<Box key={index} index={index}/>)
                     })}
+                    
                 </div> 
                 <WinnerText/>
             </div>
@@ -210,7 +257,7 @@ const TikTak = ()=>{
                 text = 'Player\'s Draw'
             break
         }
-        return <div className="UI"><button onClick={reset}>Reset Game</button><button onClick={()=>computerAI(0)}>AI test</button><h1>{text}</h1></div>
+        return <div className="UI"><button onClick={reset}>Reset Game</button><button onClick={()=>computerAI(2)}>AI test</button><h1>{text}</h1></div>
     }
     return(
         <Grid/>
