@@ -1,3 +1,49 @@
+.settings{
+    position: fixed;
+    left: 0;
+    top: 0;
+    background: rgba(110, 110, 110, 0);
+    width: 100vw;
+    height: 100vh;
+    z-index: 1;
+}
+.settings .container{
+    border: 1px solid #333;
+    border-radius: 8px;
+    margin: 10% auto;
+    display: block;
+    width: 320px;
+    padding: 20px;
+    text-align: center;
+    color: white;
+    background: rgba(0 0 0);
+}
+.settings .close{
+    position:fixed;
+    right: 0;
+    top:0;
+}
+.settings .header{
+    text-transform: uppercase;
+    font-size:16px;
+    font-weight:500
+}
+.settings span.option{
+    border:1px solid rgba(90, 143, 179, 1);
+    background:transparent;
+    border-radius: 6px;
+    margin-right:8px;
+    padding:5px;
+    text-transform: uppercase;
+    font-size: 14px
+}
+
+.settings span.option:hover,.settings span.option.selected{
+    background: rgba(90, 143, 179, 1);
+    cursor:pointer;
+}
+
+
 .UI{
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
@@ -8,6 +54,8 @@
     max-width:300px;
     height:150px;
     background:rgba(90, 143, 179, 0.8);
+    padding:8px;
+
 }
 .UI h1{
    display:block;
@@ -15,17 +63,31 @@
    font-weight:400;
    text-transform:uppercase
 }
+.UI h3{
+    text-align:center;
+    font-weight:400;
+    font-style:italic;
+}
+.UI .col button{
+    margin-right: 10px;
+    float: left;
+}
 .UI button{
     border:1px solid white;
-    border-radius:4px;
+    border-radius:6px;
     padding:6px;
     margin:15px auto;
-    display:block;
+    display: block;
+}
+.UI button.red:hover{
+    background:rgb(95, 5, 5)!important;
+
 }
 .UI button:hover{
     border:1px solid white;
-    background:rgb(95, 5, 5);
-    color:white
+    color:white;
+    background:rgb(7, 44, 146);
+
 }
 .nine_nine{
     display:flex;
