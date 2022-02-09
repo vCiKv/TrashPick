@@ -54,11 +54,6 @@ const TikTak = ()=>{
         const human = (side == 'X') ? 'O' : 'X'
      
         const copyBoard=(original :Object,index ?:any, newValue?:any)=>{
-            // const copiedBoard = [...original] 
-            // if(index != null && newValue != null){
-            //     copiedBoard[index] = newValue
-            // }
-            // return copiedBoard
             const copiedBoard = {...original} 
             index = Number(index)
             if(index != null && newValue != null){
