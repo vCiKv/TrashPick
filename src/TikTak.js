@@ -218,7 +218,6 @@ const TikTak = ()=>{
                 return(
                     <div className="settings">
                         <div className="container">
-                        <button className="close" onClick={()=>{setGameSettings({...gameSettings,['show']:!gameSettings.show})}}>close</button>
                         <h2>Game Settings</h2>
                         <div>
                             <p className="header">select side</p>
@@ -232,6 +231,7 @@ const TikTak = ()=>{
                             <span className={selected('difficulty',1,gameSettings.players)} onClick={()=>{setGameSettings({...gameSettings,['difficulty']:1,['players']:1})}}> medium</span>
                             <span className={selected('difficulty',2,gameSettings.players)} onClick={()=>{setGameSettings({...gameSettings,['difficulty']:2,['players']:1})}}>expert</span>
                         </div>
+                        <button className="close" onClick={()=>{setGameSettings({...gameSettings,['show']:!gameSettings.show})}}>close</button>
                     </div>
                 </div>
                 )
