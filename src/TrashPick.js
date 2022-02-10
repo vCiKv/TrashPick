@@ -39,7 +39,7 @@ const TrashPick=()=> {
     const trashStyle={
       width:"30px",
       height:"30px",
-      backgroundColor:"black",
+      // backgroundColor:"black",
       position:"absolute",
       zIndex:100,
       top:props.top + '%',
@@ -47,7 +47,7 @@ const TrashPick=()=> {
       margin:0
     }
     //<i class="fas fa-shopping-bag"></i> <i className="fas fa-wine-bottle fa-3x"></i>
-    return (<div onClick={()=>destroy(props.index)} style={trashStyle}></div>)
+    return (<div onClick={()=>destroy(props.index)} style={trashStyle}><i className="fas fa-wine-bottle fa-3x"></i></div>)
   }
   const CompletedPlayground = ()=>{
     const playground = {
