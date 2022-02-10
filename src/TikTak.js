@@ -28,12 +28,14 @@ const TikTak = ()=>{
     }
     const addScore = (i: number) =>{
         const switchPlayers = (p: String) =>{
-            if(p === 'X'){
-                //computerAI(2)
-                setCurrentPlayer('O')
-            }else{
-                setCurrentPlayer('X')
-            }
+                if(p === 'X'){
+                    //computerAI(2)
+                    setCurrentPlayer('O')
+                }else{
+                    setCurrentPlayer('X')
+                }
+        
+            
         }
         if(boardState[i] === 0 && winner.player === null && i != null){
             // const newState = [...boardState]
@@ -148,7 +150,7 @@ const TikTak = ()=>{
         }
         const smartMoves=()=>{
             const finalPlay = AImove()
-            console.log('ai', finalPlay)
+            //console.log('ai', finalPlay)
             addScore(finalPlay.move)
             return null
         }
@@ -188,6 +190,11 @@ const TikTak = ()=>{
           
         }
         checkWin()
+        if(gameSettings.players > 1){
+            if(currentPlayer === gameSettings.ai){
+                computerAI(gameSettings.difficulty,gameSettings.ai)
+            }
+        }
     },[boardState])
      
     const Grid = ()=>{
@@ -236,11 +243,7 @@ const TikTak = ()=>{
                 </div>
                 )
             }
-            return gameSettings.show && <UI/>
-               
-            
-
-         
+            return gameSettings.show && <UI/>      
         }
         const WinnerText = () =>{
             let winnerText=null
